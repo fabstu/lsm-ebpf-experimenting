@@ -1,0 +1,3 @@
+*.o
+*_bpfeb.go
+*_bpfel.go
