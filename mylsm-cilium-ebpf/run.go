@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"aduu.dev/utils/errors2"
 	"golang.org/x/sys/unix"
 )
 
@@ -34,7 +35,16 @@ func run() (err error) {
 	if err := LoadLSMObjects(&objs, nil); err != nil {
 		log.Fatalf("loading objects: %v", err)
 	}
-	defer objs.Close()
+	defer func() {
+		if err2 := objs.Close(); err2 != nil {
+			err = errors2.CombineErrors(err, err2)
+		}
+	}()
+
+	_, err = LoadLSM()
+	if err != nil {
+		log.Fatalf("loading lsm: %v", err)
+	}
 
 	/*prog, err := ebpf.NewProgram(&ebpf.ProgramSpec{
 		AttachTo:   "lsm/file_mprotect",
