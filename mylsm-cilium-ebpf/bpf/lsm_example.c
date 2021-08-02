@@ -19,7 +19,7 @@ SEC("lsm/settime")
 int lsm_settime(struct timespec64 *ts,
 			  struct timezone *tz)
 {
-	bpf_trace_printk(msg, 17);
+	// bpf_trace_printk(msg, 17);
 	return -EPERM;
 }
 

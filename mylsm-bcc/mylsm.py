@@ -18,8 +18,6 @@ LSM_PROBE(settime, const struct timespec64 *ts, const struct timezone *tz)
 
 b = BPF(text=src1)
 
-print("Sleeping")
-
 while True:
     time.sleep(1)
-    print("Sleeping again")
+

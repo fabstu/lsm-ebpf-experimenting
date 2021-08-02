@@ -12,7 +12,14 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example.c -- -I../headers
+///go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example.c -- -I../headers
+///go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example2.c -- -I../headers -I/usr/include
+////go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example2.c -- -I../headers -I../../../linux-acslab-lsm/include -I../../../linux-acslab-lsm/arch/x86/include
+///go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example2.c -- -I../headers -I/usr/include/linux
+
+///go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example2.c -- -I../../../linux-acslab-lsm/include/uapi -I../../../linux-acslab-lsm/include -I../../../linux-acslab-lsm/arch/x86/include/uapi -I../../../linux-acslab-lsm/arch/x86/include/generated -I../../../linux-acslab-lsm/arch/x86/include -I../headers
+
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang-11 LSM ./bpf/lsm_example2.c -- -I../../../linux-acslab-lsm/include/uapi -I../../../linux-acslab-lsm/arch/x86/include/uapi -I../headers
 
 const mapKey uint32 = 0
 
@@ -41,10 +48,10 @@ func run() (err error) {
 		}
 	}()
 
-	_, err = LoadLSM()
-	if err != nil {
-		log.Fatalf("loading lsm: %v", err)
-	}
+	// _, err = LoadLSM()
+	// if err != nil {
+	// 	log.Fatalf("loading lsm: %v", err)
+	// }
 
 	/*prog, err := ebpf.NewProgram(&ebpf.ProgramSpec{
 		AttachTo:   "lsm/file_mprotect",
@@ -75,6 +82,7 @@ func run() (err error) {
 	defer cancel()
 
 	log.Println("Waiting for events..")
+	log.Println("Sleeping")
 
 	for {
 		select {
@@ -84,7 +92,7 @@ func run() (err error) {
 			// 	log.Fatalf("reading map: %v", err)
 			// }
 			// log.Printf("%s called %d times\n", fn, value)
-			fmt.Println("Small update")
+			fmt.Println("Sleeping again")
 		case <-ctx.Done():
 			return
 		}
